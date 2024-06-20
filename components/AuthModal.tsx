@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeMinimal, ThemeSupa } from "@supabase/auth-ui-shared";
 import useAuthModal from "@/hooks/useAuthModal";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 const AuthModal = () => {
   const { onClose, isOpen } = useAuthModal();
   const supabaseClient = useSupabaseClient();

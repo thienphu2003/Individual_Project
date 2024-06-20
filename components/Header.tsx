@@ -20,7 +20,6 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
   const router = useRouter();
-
   const authModal = useAuthModal();
   const supabaseClient = useSupabaseClient();
   const { user, subscription } = useUser();
@@ -65,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
           </button>
         </div>
         <div className="flex items-center gap-x-4 justify-between">
-          {user ? (
+          {user && !status ? (
             <div className="flex gap-x-4 items-center">
               <Button className="bg-white px-6 py-2" onClick={handleLogout}>
                 Logout
