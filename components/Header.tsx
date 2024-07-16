@@ -13,18 +13,21 @@ import { useUser } from "@/hooks/useUser";
 import { DiVim } from "react-icons/di";
 import { FaUserAlt } from "react-icons/fa";
 import toast from "react-hot-toast";
+import usePlayer from "@/hooks/usePlayer";
 interface HeaderProps {
   children: React.ReactNode;
   className?: string;
 }
 
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
+  const player = usePlayer();
   const router = useRouter();
   const authModal = useAuthModal();
   const supabaseClient = useSupabaseClient();
   const { user, subscription } = useUser();
   const handleLogout = async () => {
     const { error } = await supabaseClient.auth.signOut();
+    player.reset();
     router.refresh();
     if (error) {
       toast.error(error.message);
