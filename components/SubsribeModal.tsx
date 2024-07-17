@@ -4,11 +4,11 @@ import { Price, ProductWithPrice } from "@/types";
 import Modal from "./Modal";
 import Button from "./Button";
 import { useState } from "react";
-import { useUser } from "@/hooks/useUser";
 import toast from "react-hot-toast";
 import { postData } from "@/libs/helpers";
 import { getStripe } from "@/libs/stripeClient";
 import useSubscribeModal from "@/hooks/useSubscribeModal";
+import { useUser } from "@/hooks/useUser";
 
 interface ModalProviderProps {
   products: ProductWithPrice[];
@@ -40,7 +40,7 @@ const SubscribeModal: React.FC<ModalProviderProps> = ({ products }) => {
     }
     if (subscription) {
       setPriceIdLoading(undefined);
-      return toast("All ready subscribed");
+      return toast("Already subscribed");
     }
     try {
       const { sessionId } = await postData({
@@ -48,7 +48,7 @@ const SubscribeModal: React.FC<ModalProviderProps> = ({ products }) => {
         data: { price },
       });
       const stripe = await getStripe();
-      stripe?.redirectToCheckout(sessionId);
+      stripe?.redirectToCheckout({ sessionId: sessionId });
     } catch (err) {
       toast.error((err as Error)?.message);
     } finally {
@@ -87,7 +87,7 @@ const SubscribeModal: React.FC<ModalProviderProps> = ({ products }) => {
     <Modal
       title="Only for premium users"
       description="Listen to music with Spotify Premium"
-      isOpen
+      isOpen={subscribeModel.isOpen}
       onChange={onChange}
     >
       {content}
