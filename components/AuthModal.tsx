@@ -9,8 +9,9 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeMinimal, ThemeSupa } from "@supabase/auth-ui-shared";
 import useAuthModal from "@/hooks/useAuthModal";
 import { useEffect, useState } from "react";
+import SignUpModal from "./SignUpModal";
 const AuthModal = () => {
-  const { onClose, isOpen, isOpenForSignUp } = useAuthModal();
+  const { onClose, isOpen, isOpenForSignUp, onCloseSignUp } = useAuthModal();
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
   const { session } = useSessionContext();
@@ -19,6 +20,13 @@ const AuthModal = () => {
       onClose();
     }
   };
+
+  const onChangeSignUp = (open: boolean) => {
+    if (!open) {
+      onCloseSignUp();
+    }
+  };
+
   useEffect(() => {
     if (session) {
       router.refresh();
@@ -26,11 +34,11 @@ const AuthModal = () => {
     }
   }, [onClose, router, session]);
   return isOpenForSignUp ? (
-    <Modal
+    <SignUpModal
       title="Welcome back"
       description="Sign up for an account"
-      isOpen={isOpenForSignUp}
-      onChange={onChange}
+      onChange={onChangeSignUp}
+      isOpenForSignUp={isOpenForSignUp}
     >
       <Auth
         supabaseClient={supabaseClient}
@@ -50,7 +58,7 @@ const AuthModal = () => {
         }}
         theme="dark"
       ></Auth>
-    </Modal>
+    </SignUpModal>
   ) : (
     <Modal
       title="Welcome back"
