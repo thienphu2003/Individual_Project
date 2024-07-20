@@ -10,7 +10,7 @@ import { ThemeMinimal, ThemeSupa } from "@supabase/auth-ui-shared";
 import useAuthModal from "@/hooks/useAuthModal";
 import { useEffect, useState } from "react";
 const AuthModal = () => {
-  const { onClose, isOpen } = useAuthModal();
+  const { onClose, isOpen, isOpenForSignUp } = useAuthModal();
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
   const { session } = useSessionContext();
@@ -25,7 +25,33 @@ const AuthModal = () => {
       onClose();
     }
   }, [onClose, router, session]);
-  return (
+  return isOpenForSignUp ? (
+    <Modal
+      title="Welcome back"
+      description="Sign up for an account"
+      isOpen={isOpenForSignUp}
+      onChange={onChange}
+    >
+      <Auth
+        supabaseClient={supabaseClient}
+        providers={["github", "google", "facebook"]}
+        magicLink
+        view="sign_up"
+        appearance={{
+          theme: ThemeSupa,
+          variables: {
+            default: {
+              colors: {
+                brand: "#404040",
+                brandAccent: "#22c55e",
+              },
+            },
+          },
+        }}
+        theme="dark"
+      ></Auth>
+    </Modal>
+  ) : (
     <Modal
       title="Welcome back"
       description="Login to your account"
@@ -36,6 +62,7 @@ const AuthModal = () => {
         supabaseClient={supabaseClient}
         providers={["github", "google", "facebook"]}
         magicLink
+        view="sign_in"
         appearance={{
           theme: ThemeSupa,
           variables: {
